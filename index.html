@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Iligan Spot | Find hidden gems</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+    /* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+body {
+  background: #f7f7f7;
+  color: #222;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* NAVBAR */
+.navbar {
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.nav-container {
+  max-width: 1100px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+.brand img {
+  width: 32px;
+}
+.nav-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+.btn-outline {
+  border: 1px solid #222;
+  padding: 6px 14px;
+  border-radius: 20px;
+  transition: 0.2s;
+}
+.btn-outline:hover {
+  background: #222;
+  color: #fff;
+}
+
+/* HERO */
+.hero {
+  background: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1350&q=80")
+    center/cover no-repeat;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  position: relative;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+.hero-inner {
+  position: relative;
+  z-index: 2;
+}
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+.search-bar {
+  margin-top: 24px;
+  display: flex;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #fff;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.search-bar input {
+  flex: 1;
+  border: none;
+  padding: 14px 22px;
+  font-size: 1rem;
+}
+.search-bar button {
+  background: #ff5a5f;
+  color: #fff;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+.search-bar button:hover {
+  background: #e04b50;
+}
+
+/* FILTER */
+.filter-sec {
+  padding: 20px;
+  background: #fff;
+}
+.chip {
+  display: inline-block;
+  padding: 6px 14px;
+  margin: 4px;
+  border-radius: 20px;
+  background: #f1f1f1;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.chip.active,
+.chip:hover {
+  background: #222;
+  color: #fff;
+}
+
+/* CARDS */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+.spots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+.card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+.card-body {
+  padding: 16px;
+}
+.card-title {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+.card-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: #666;
+}
+.card-rating {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #ff5a5f;
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background: #fff;
+  padding: 32px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+}
+.close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+.modal h2 {
+  margin-bottom: 20px;
+}
+.modal input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+.btn-primary {
+  background: #ff5a5f;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.btn-primary:hover {
+  background: #e04b50;
+}
+.full {
+  width: 100%;
+}
+.switch {
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+
+/* OFFLINE BANNER */
+.offline-banner {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #222;
+  color: #fff;
+  text-align: center;
+  padding: 12px;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 24px 10px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+}
+</style>
+
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <img src= alt="Iligan Spot" />
+        <span>Iligan Spot</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#spots">Spots</a></li>
+        <li><a href="#about">About</a></li>
+        <li><button class="btn-outline" id="loginBtn">Login</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO / SEARCH -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Discover Iligan City</h1>
+      <p>Find waterfalls, cold springs & historical landmarks.</p>
+      <form class="search-bar" id="searchForm">
+        <input type="text" placeholder="Search tourist spot…" id="searchInput" required />
+        <button type="submit" class="btn-primary">
+          <span class="material-icons">search</span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FILTER CHIPS -->
+  <section class="filter-sec">
+    <div class="container">
+      <div class="chip active" data-filter="all">All</div>
+      <div class="chip" data-filter="waterfall">Waterfalls</div>
+      <div class="chip" data-filter="spring">Cold Springs</div>
+      <div class="chip" data-filter="historical">Historical</div>
+    </div>
+  </section>
+
+  <!-- CARDS GRID -->
+  <section id="spots" class="spots container">
+    <!-- cards injected by JS -->
+  </section>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <button type="submit" class="btn-primary full">Login</button>
+      </form>
+      <p class="switch">Admin? <a href="#">Login as Admin</a></p>
+    </div>
+  </div>
+
+  <!-- OFFLINE BANNER -->
+  <div id="offlineBanner" class="offline-banner">You’re offline. Pre-downloaded directions are available.</div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; <span id="year"></span> Iligan Spot. Open-source on GitHub.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+
+<script>
+    // DEMO DATA (replace later with fetch)
+const spots = [
+  {
+    id: 1,
+    name: "Maria Cristina Falls",
+    category: "waterfall",
+    img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60",
+    location: "Buru-un, Iligan City",
+    rating: 4.8,
+    description: "Twin waterfall powering the Agus VI hydro plant."
+  },
+  {
+    id: 2,
+    name: "Tinago Falls",
+    category: "waterfall",
+    img: "https://images.unsplash.com/photo-1439853949127-fa647821eba0?auto=format&fit=crop&w=800&q=60",
+    location: "Brgy. Ditucalan, Iligan",
+    rating: 4.9,
+    description: "Hidden gem nestled in a deep ravine."
+  },
+  {
+    id: 3,
+    name: "Mimbalut Falls",
+    category: "waterfall",
+    img: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=60",
+    location: "Brgy. Buru-un",
+    rating: 4.6,
+    description: "Easy-access natural pool for families."
+  },
+  {
+    id: 4,
+    name: "Timoga Cold Springs",
+    category: "spring",
+    img: "https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?auto=format&fit=crop&w=800&q=60",
+    location: "Brgy. Timoga, Iligan",
+    rating: 4.7,
+    description: "Ice-cold spring water pools."
+  },
+  {
+    id: 5,
+    name: "Anahaw Amphitheater",
+    category: "historical",
+    img: "https://images.unsplash.com/photo-1519452575417-564c1401ecc0?auto=format&fit=crop&w=800&q=60",
+    location: "MSU-IIT Campus",
+    rating: 4.5,
+    description: "Iconic open-air venue for cultural shows."
+  }
+];
+
+// RENDER CARDS
+const spotsContainer = document.querySelector(".spots");
+const searchForm = document.getElementById("searchForm");
+const searchInput = document.getElementById("searchInput");
+const chips = document.querySelectorAll(".chip");
+
+function renderCards(list) {
+  spotsContainer.innerHTML = "";
+  list.forEach((s) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <img src="${s.img}" alt="${s.name}" />
+      <div class="card-body">
+        <h3 class="card-title">${s.name}</h3>
+        <div class="card-location">
+          <span class="material-icons" style="font-size:16px;">place</span>
+          <span>${s.location}</span>
+        </div>
+        <div class="card-rating">⭐ ${s.rating}</div>
+        <p style="margin-top:8px;font-size:0.9rem;color:#555;">${s.description}</p>
+        <button class="btn-primary" style="margin-top:12px;width:100%;">Download Directions (Offline)</button>
+      </div>
+    `;
+    spotsContainer.appendChild(card);
+  });
+}
+renderCards(spots);
+
+// FILTER
+chips.forEach((c) =>
+  c.addEventListener("click", () => {
+    chips.forEach((i) => i.classList.remove("active"));
+    c.classList.add("active");
+    const filter = c.dataset.filter;
+    const filtered =
+      filter === "all"
+        ? spots
+        : spots.filter((s) => s.category === filter);
+    renderCards(filtered);
+  })
+);
+
+// SEARCH
+searchForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const q = searchInput.value.toLowerCase();
+  const filtered = spots.filter((s) =>
+    s.name.toLowerCase().includes(q)
+  );
+  renderCards(filtered);
+});
+
+// LOGIN MODAL
+const loginBtn = document.getElementById("loginBtn");
+const modal = document.getElementById("loginModal");
+const closeModal = document.querySelector(".close");
+
+loginBtn.onclick = () => (modal.style.display = "flex");
+closeModal.onclick = () => (modal.style.display = "none");
+window.onclick = (e) => {
+  if (e.target === modal) modal.style.display = "none";
+};
+
+// OFFLINE DETECT
+window.addEventListener("offline", () => {
+  document.getElementById("offlineBanner").style.display = "block";
+});
+window.addEventListener("online", () => {
+  document.getElementById("offlineBanner").style.display = "none";
+});
+
+// FOOTER YEAR
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</html>
